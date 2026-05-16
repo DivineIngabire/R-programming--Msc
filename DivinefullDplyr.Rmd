@@ -1,0 +1,195 @@
+---
+title: "EXERCISEABOUTDPLYR"
+author: "Divine Ing."
+date: "2026-05-12"
+output: html_document
+---
+#Dplyr function.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+product<-data.frame(product_id=c(1:10),
+                    product_name=c("Biscuit","Banana","Orange","Juice","Phone","Yoghurt","Watch","Laptop","Bag","Desk"),
+                    Price=c(100,50,10,200,45000,120,2400,60000,19000,90000),
+                    Category=c("Foodstuff","Foodstuff","Foodstuff","Foodstuff","Items","Foodstuff","Item","Item","Item","Item"),
+                    Quantity=c(1,1,1,1,1,1,1,1,1,1))
+product
+
+```
+```{r}
+library(dplyr)
+```
+
+```{r}
+install.packages("ggplot2")
+```
+```{r}
+library(ggplot2)
+```
+
+```{r}
+#install.packages("magrittr")
+```
+```{r}
+library(magrittr)
+```
+```{r}
+#install.packages("tidyverse")
+```
+
+```{r}
+library(tidyverse)
+```
+
+## Filter Function
+```{r}
+filter(product,Category =="Foodstuff")
+```
+
+```{r}
+filter(product,Price>10000)
+```
+## Select
+
+```{r}
+select(product,Category)
+```
+
+## Mutate
+```{r}
+mutate(product,totalprice = Price*Quantity)
+```
+```{r}
+mutate(product)
+```
+
+## To remove a column
+```{r}
+select(product, -Quantity)
+```
+## arrange from the lowest to highest
+
+```{r}
+arrange(product,Price)
+```
+
+## %>%
+
+```{r}
+product%>%
+  arrange(Price)
+```
+```{r}
+product%>%
+  arrange(desc(Price))
+```
+
+```{r}
+tail(product,5)
+```
+
+```{r}
+product%>%
+  tail(6)
+```
+
+## Slice is better in selecting specific rows , and it is used in big data sets.
+
+```{r}
+slice(product,1,5)
+```
+```{r}
+product%>%
+  slice(5)
+```
+
+## Remove 7th row
+```{r}
+product%>%
+  slice(-7)
+```
+## Rename () can only rename column names , nothing else !
+
+```{r}
+product%>%
+  rename(price=Price)
+```
+
+```{r}
+product%>%
+  rename(category=Category)
+```
+```{r}
+product%>%
+  rename(quantity=Quantity,price=Price,category=Category)
+```
+
+```{r}
+product%>%
+  select(Price)
+```
+```{r}
+newdataset <-product%>%
+  rename(price=Price)
+newdataset
+```
+```{r}
+select(newdataset,price)
+```
+
+```{r}
+filter(newdataset,price<5000)
+```
+## Group_by alone does not change anything, it can be along with the useful summarize () function
+
+```{r}
+product%>%
+  group_by(Category)%>%
+summarise(
+    total_items=n(),
+    average=mean(Price),
+    standarddevia=round(sd(Price),2),
+    totalprice=sum(Price),
+    maximprice=max(Price),
+    miniprice=min(Price),
+    rangeprice=max(Price)-min(Price),
+    meadianprice=median(Price)
+)
+```
+
+# Rowbind
+
+```{r}
+Client<-data.frame(
+  name=c("Solange","Divine"),
+  Category=c("Foodstuff","Item")
+)
+Client
+```
+```{r}
+product_client<-bind_rows(product,Client)
+product_client
+```
+
+## Bindcolumns
+```{r}
+bind_cols(newdataset, product)
+```
+
+```{r}
+p<-product%>%
+  select(Price)
+p
+```
+
+```{r}
+c<-newdataset%>%
+  select(price)
+c
+```
+```{r}
+bind_cols(p,c)
+```
+
